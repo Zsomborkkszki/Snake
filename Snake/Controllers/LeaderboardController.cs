@@ -37,11 +37,7 @@ namespace Snake.Controllers
         }
         public static void AddUser(string nev, int pontszam)
         {
-            if (UserCheck(nev) == -1)
-            {
-                return;
-            }
-            else if (UserCheck(nev) == 1)
+            if (UserCheck(nev) == 1)
             {
                 MySqlConnection connection = new MySqlConnection("server=localhost;database=snake;uid=root;pwd=;");
                 connection.Open();
@@ -50,10 +46,6 @@ namespace Snake.Controllers
                 command.Parameters.AddWithValue("@pontszam", pontszam);
                 command.ExecuteNonQuery();
                 connection.Close();
-            }
-            else
-            {
-                return;
             }
 
         }
