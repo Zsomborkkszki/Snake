@@ -10,15 +10,44 @@ namespace Snake.Controllers
 {
     internal class LeaderboardController
     {
-        public static void AddUser(string nev, int pontszam)
+        public static int UserCheck(string nev)
         {
             MySqlConnection connection = new MySqlConnection("server=localhost;database=snake;uid=root;pwd=;");
             connection.Open();
-            MySqlCommand command = new MySqlCommand("INSERT INTO users (nev, pontszam) VALUES (@nev, @pontszam)", connection);
-            command.Parameters.AddWithValue("@nev", nev);
-            command.Parameters.AddWithValue("@pontszam", pontszam);
-            command.ExecuteNonQuery();
+            MySqlCommand command = new MySqlCommand("SELECT * FROM users", connection);
+            MySqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                if (reader.GetString("nev") == nev)
+                {
+                    reader.Close();
+                    connection.Close();
+                    return -1;
+                }
+                else
+                {
+                    reader.Close();
+                    connection.Close();
+                    return 1;
+                }
+            }
+            reader.Close();
             connection.Close();
+            return 0; // Default return value if no rows are read
+        }
+        public static void AddUser(string nev, int pontszam)
+        {
+            if (UserCheck(nev) == 1)
+            {
+                MySqlConnection connection = new MySqlConnection("server=localhost;database=snake;uid=root;pwd=;");
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("INSERT INTO users (id, nev, pontszam) VALUES (NULL, @nev, @pontszam)", connection);
+                command.Parameters.AddWithValue("@nev", nev);
+                command.Parameters.AddWithValue("@pontszam", pontszam);
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+
         }
         public static List<User> UsersToListByPoints()
         {
