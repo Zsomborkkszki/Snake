@@ -98,5 +98,11 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\GIGYO.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\test.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
