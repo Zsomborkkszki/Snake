@@ -14,7 +14,7 @@ namespace Snake.Controllers
         {
             MySqlConnection connection = new MySqlConnection("server=localhost;database=snake;uid=root;pwd=;");
             connection.Open();
-            MySqlCommand command = new MySqlCommand("INSERT INTO users (nev, pontszam) VALUES (@nev, @pontszam)", connection);
+            MySqlCommand command = new MySqlCommand("INSERT INTO users (id, nev, pontszam) VALUES (NULL, @nev, @pontszam)", connection);
             command.Parameters.AddWithValue("@nev", nev);
             command.Parameters.AddWithValue("@pontszam", pontszam);
             command.ExecuteNonQuery();
