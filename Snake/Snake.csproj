@@ -147,13 +147,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\GIGYO.JPG" />
+    <Resource Include="Assets\GIGYO.JPG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\test.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\alma.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\alma2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

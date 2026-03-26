@@ -41,20 +41,15 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
+    <Grid Background="Transparent">
         <!-- Dark grey gradient background -->
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#1a1a1a" Offset="0"/>
-                <GradientStop Color="#2c2c2c" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+       
 
         <!-- Grid lines drawn in code-behind -->
-        <Canvas x:Name="BgCanvas" Opacity="0.12"/>
+        <Canvas x:Name="BgCanvas" Opacity="0.12" Background="White"/>
 
         <!-- Game Canvas (hidden until game starts) -->
-        <Canvas x:Name="GameCanvas" Visibility="Collapsed"/>
+        <Canvas x:Name="GameCanvas" Visibility="Collapsed" />
 
         <!-- Menu -->
         <StackPanel x:Name="MenuPanel"

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,6 +21,8 @@ namespace SnakeGame
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Point _applePos;
+        private int _cellSize = 40;
         public MainWindow()
         {
             InitializeComponent();
@@ -28,26 +31,64 @@ namespace SnakeGame
 
         private void DrawGridBackground()
         {
-            int cellSize = 20;
-            var stroke = new SolidColorBrush(Color.FromRgb(76, 175, 80)); // #4caf50
+            int cellSize = 40;
+            bool toggle = false;
 
-            for (int x = 0; x < ActualWidth; x += cellSize)
-            {
-                var line = new Line { X1 = x, Y1 = 0, X2 = x, Y2 = ActualHeight, Stroke = stroke, StrokeThickness = 0.5 };
-                BgCanvas.Children.Add(line);
-            }
+            Color light = Color.FromRgb(180, 230, 110);
+            Color dark = Color.FromRgb(160, 210, 85);  // #84c540
+
             for (int y = 0; y < ActualHeight; y += cellSize)
             {
-                var line = new Line { X1 = 0, Y1 = y, X2 = ActualWidth, Y2 = y, Stroke = stroke, StrokeThickness = 0.5 };
-                BgCanvas.Children.Add(line);
+                toggle = (y / cellSize) % 2 == 0;
+                for (int x = 0; x < ActualWidth; x += cellSize)
+                {
+                    var cell = new Rectangle
+                    {
+                        Width = cellSize,
+                        Height = cellSize,
+                        Fill = new SolidColorBrush(toggle ? light : dark)
+                    };
+                    Canvas.SetLeft(cell, x);
+                    Canvas.SetTop(cell, y);
+                    BgCanvas.Children.Add(cell);
+                    toggle = !toggle;
+                }
             }
         }
 
         public void StartGame_Click(object sender, RoutedEventArgs e)
         {
             MenuPanel.Visibility = Visibility.Collapsed;
+            BgCanvas.Opacity = 1.0;
             GameCanvas.Visibility = Visibility.Visible;
+            SpawnApple();  
             // StartGame();
+        }
+        private void ShowMenu()
+        {
+            GameCanvas.Visibility = Visibility.Collapsed;
+            BgCanvas.Opacity = 0.12;         // bring the dark overlay back
+            MenuPanel.Visibility = Visibility.Visible;
+        }
+        private void SpawnApple()
+        {
+            int cols = (int)(ActualWidth / _cellSize);
+            int rows = (int)(ActualHeight / _cellSize);
+
+            var rng = new Random();
+            _applePos = new Point(rng.Next(0, cols) * _cellSize, rng.Next(0, rows) * _cellSize);
+
+            var apple = new Image
+            {
+                Width = _cellSize,
+                Height = _cellSize,
+                Source = new BitmapImage(new Uri("pack://application:,,,/Assets/alma2.png")),
+                Tag = "apple"
+            };
+
+            Canvas.SetLeft(apple, _applePos.X);
+            Canvas.SetTop(apple, _applePos.Y);
+            GameCanvas.Children.Add(apple);
         }
 
         public void HighScores_Click(object sender, RoutedEventArgs e) { }
