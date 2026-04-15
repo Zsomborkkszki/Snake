@@ -113,6 +113,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\LeaderboardController.cs" />
+    <Compile Include="Controllers\SnakeCOntroller.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -49,7 +49,9 @@
         <Canvas x:Name="BgCanvas" Opacity="0.12" Background="White"/>
 
         <!-- Game Canvas (hidden until game starts) -->
-        <Canvas x:Name="GameCanvas" Visibility="Collapsed" />
+        <Canvas x:Name="GameCanvas" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}"
+            Visibility="Collapsed"/>
 
         <!-- Menu -->
         <StackPanel x:Name="MenuPanel"
