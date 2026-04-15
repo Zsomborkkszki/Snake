@@ -56,10 +56,11 @@ namespace SnakeGame
             bool toggle = false;
             Color light = Color.FromRgb(180, 230, 110);
             Color dark = Color.FromRgb(160, 210, 85);
-            for (int y = 0; y < ActualHeight; y += cellSize)
+            for (int y = 0; y < totalH; y += cellSize)
             {
                 toggle = (y / cellSize) % 2 == 0;
-                for (int x = 0; x < ActualWidth; x += cellSize)
+
+                for (int x = 0; x < totalW; x += cellSize)
                 {
                     var cell = new Rectangle { Width = cellSize, Height = cellSize, Fill = new SolidColorBrush(toggle ? light : dark) };
                     Canvas.SetLeft(cell, x);
@@ -88,14 +89,20 @@ namespace SnakeGame
         public void StartGame_Click(object sender, RoutedEventArgs e)
         {
             HideAllPanels();
+
             BgCanvas.Opacity = 1.0;
             GameCanvas.Visibility = Visibility.Visible;
+
+            InitGameArea(); 
+
             GameCanvas.Children.Clear();
+
             _snake = new SnakeController(
                 gameCanvas: GameCanvas,
                 onGameOver: () => Dispatcher.Invoke(OnGameOver),
                 onAppleEaten: () => Dispatcher.Invoke(SpawnApple)
             );
+
             SpawnApple();
             _snake.PlaceSnake();
             _snake.Start();
