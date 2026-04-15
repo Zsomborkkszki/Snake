@@ -27,9 +27,9 @@ namespace Snake.Controllers
         private readonly DispatcherTimer _timer = new DispatcherTimer(DispatcherPriority.Render);
 
         private readonly BitmapImage _headBitmap =
-            new BitmapImage(new Uri("pack://application:,,,/Assets/GIGYO.JPG"));
+            new BitmapImage(new Uri("pack://application:,,,/Assets/fej.png"));
         private readonly BitmapImage _bodyBitmap =
-            new BitmapImage(new Uri("pack://application:,,,/Assets/test.jpg"));
+            new BitmapImage(new Uri("pack://application:,,,/Assets/test.png"));
 
 
         public int Score
@@ -43,7 +43,7 @@ namespace Snake.Controllers
             _onGameOver = onGameOver;
             _onAppleEaten = onAppleEaten;
 
-            _timer.Interval = TimeSpan.FromMilliseconds(120);
+            _timer.Interval = TimeSpan.FromMilliseconds(200);
             _timer.Tick += (s, e) => Tick();
         }
 

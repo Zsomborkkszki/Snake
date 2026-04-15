@@ -32,7 +32,7 @@ USE `snake`;
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `Id` int(11) NOT NULL,
-  `Nev` int(64) NOT NULL,
+  `Nev` varchar(64) NOT NULL,
   `Pontszam` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 

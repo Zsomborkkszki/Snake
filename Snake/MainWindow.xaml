@@ -66,6 +66,65 @@
             <Button Content="Játék"        Style="{StaticResource MenuButton}" Click="StartGame_Click"/>
             <Button Content="Ranglista" Style="{StaticResource MenuButton}" Click="HighScores_Click"/>
             <Button Content="Kilépés"        Style="{StaticResource MenuButton}" Click="Quit_Click"/>
+            
+        </StackPanel>
+        <!-- Name Input Panel -->
+        <StackPanel x:Name="NameInputPanel"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Visibility="Collapsed">
+            <TextBlock x:Name="GameOverScoreText"
+               Foreground="#4caf50" FontSize="28" FontWeight="Bold"
+               HorizontalAlignment="Center" Margin="0,0,0,16" Text="Játék vége!"/>
+            <TextBlock Text="Add meg a neved:"
+               Foreground="White" FontSize="18"
+               HorizontalAlignment="Center" Margin="0,0,0,10"/>
+            <TextBox x:Name="NameInputBox"
+             Width="220" Height="40" FontSize="16"
+             HorizontalAlignment="Center" TextAlignment="Center"
+             Background="#2a2a2a" Foreground="White"
+             BorderBrush="#4caf50" BorderThickness="2"
+             Margin="0,0,0,16"
+             KeyDown="NameInputBox_KeyDown"/>
+            <Button Content="Mentés és Ranglista" Style="{StaticResource MenuButton}"
+            Width="220" Click="SaveAndShowLeaderboard_Click"/>
+            <Button Content="Vissza a menübe" Style="{StaticResource MenuButton}"
+            Width="220" Click="BackToMenu_Click"/>
+        </StackPanel>
+
+        <!-- Leaderboard Panel -->
+        <StackPanel x:Name="LeaderboardPanel"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Visibility="Collapsed">
+            <TextBlock Text="RANGLISTA"
+               Foreground="#4caf50" FontSize="36" FontWeight="Bold"
+               HorizontalAlignment="Center" Margin="0,0,0,20"/>
+            <DataGrid x:Name="LeaderboardGrid"
+              Width="400" Height="320"
+              AutoGenerateColumns="False" IsReadOnly="True"
+              Background="#1a1a1a" Foreground="White"
+              BorderBrush="#4caf50" BorderThickness="2"
+              RowBackground="#1a1a1a" AlternatingRowBackground="#222222"
+              GridLinesVisibility="None" HeadersVisibility="Column"
+              FontSize="14" Margin="0,0,0,16">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#2a2a2a"/>
+                        <Setter Property="Foreground" Value="#4caf50"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="#"        Width="50"  Binding="{Binding Helyezes}"/>
+                    <DataGridTextColumn Header="Név"      Width="*"   Binding="{Binding Nev}"/>
+                    <DataGridTextColumn Header="Pontszám" Width="100" Binding="{Binding Pontszam}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button Content="Vissza a menübe" Style="{StaticResource MenuButton}"
+            Click="BackToMenu_Click"/>
         </StackPanel>
     </Grid>
 </Window>
