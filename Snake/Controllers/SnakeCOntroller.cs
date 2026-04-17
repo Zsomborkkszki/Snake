@@ -11,9 +11,8 @@ namespace Snake.Controllers
 {
     internal class SnakeController
     {
-
+        
         private const int CellSize = 40;
-
         private readonly Canvas _gameCanvas;
         private readonly Action _onGameOver;
         private readonly Action _onAppleEaten;
@@ -32,10 +31,20 @@ namespace Snake.Controllers
             new BitmapImage(new Uri("pack://application:,,,/Assets/test.png"));
 
 
+        /// <summary>
+        /// Visszaadja a jelenlegi pontszámot, ami a kígyó hosszából származik (3 kezdeti szegmens miatt -3).
+        /// </summary>
         public int Score
         {
             get { return _segments.Count - 3; }
         }
+
+        /// <summary>
+        /// Konstruktor, ami inicializálja a kígyó vezérlőjét a játék vásznával és a szükséges callback-ekkel.
+        /// </summary>
+        /// <param name="gameCanvas"></param>
+        /// <param name="onGameOver"></param>
+        /// <param name="onAppleEaten"></param>
 
         public SnakeController(Canvas gameCanvas, Action onGameOver, Action onAppleEaten)
         {
@@ -46,6 +55,11 @@ namespace Snake.Controllers
             _timer.Interval = TimeSpan.FromMilliseconds(200);
             _timer.Tick += (s, e) => Tick();
         }
+
+
+        /// <summary>
+        /// Ez a metódus helyezi el a kígyó kezdeti pozícióját a vászon közepére, és inicializálja a kígyó szegmenseit.
+        /// </summary>
 
         public void PlaceSnake()
         {
@@ -71,7 +85,10 @@ namespace Snake.Controllers
             _direction = _nextDirection = new Point(1, 0);
         }
 
-
+        /// <summary>
+        /// Ez a metódus kezeli a billentyűleütéseket, és frissíti a kígyó irányát. Nem engedi meg az ellentétes irányba való fordulást.
+        /// </summary>
+        /// <param name="key"></param>
         public void HandleKeyDown(Key key)
         {
             Point d;
@@ -88,6 +105,9 @@ namespace Snake.Controllers
                 _nextDirection = d;
         }
 
+        /// <summary>
+        /// Ez a metódus növeli a kígyó hosszát egy új szegmens hozzáadásával a farokhoz, és értesíti a pontszám változásáról.
+        /// </summary>
         private void GrowSnake()
         {
             Point tail = _segments[_segments.Count - 1];
@@ -106,7 +126,11 @@ namespace Snake.Controllers
             if (_onAppleEaten != null)
                 _onAppleEaten.Invoke();
         }
-
+        /// <summary>
+        /// Ez a metódus ellenőrzi, hogy a kígyó új feje ütközik-e a saját testével, ami a játék végét jelenti.
+        /// </summary>
+        /// <param name="newHead"></param>
+        /// <returns></returns>
         private bool CheckSelfCollision(Point newHead)
         {
             for (int i = 1; i < _segments.Count; i++)
@@ -116,6 +140,11 @@ namespace Snake.Controllers
             }
             return false;
         }
+        /// <summary>
+        /// Ez a metódus ellenőrzi, hogy a kígyó új feje ütközik-e a vászon szélével, ami a játék végét jelenti.
+        /// </summary>
+        /// <param name="newHead"></param>
+        /// <returns></returns>
 
         private bool CheckWallCollision(Point newHead)
         {
@@ -128,6 +157,23 @@ namespace Snake.Controllers
                 || newHead.Y >= _gameCanvas.ActualHeight;
         }
 
+        /// <summary>
+        /// Ez a metódus kezeli a játék végét, megállítja a timert, és meghívja a játék vége callback-et egy adott okkal.
+        /// Ez lehet ütközés a fallal, önmagával, vagy az, hogy nincs több lépési lehetőség.
+        /// </summary>
+        /// <param name="reason"></param>
+        private void TriggerGameOver(string reason)
+        {
+            _timer.Stop();
+            System.Diagnostics.Debug.WriteLine("Game Over: " + reason + " | Pontszám: " + Score);
+            if (_onGameOver != null)
+                _onGameOver.Invoke();
+        }
+        /// <summary>
+        /// Ez a metódus ellenőrzi, hogy a kígyó új feje körül nincs-e olyan mező, amire léphetne, ami akkor fordul elő, ha a kígyó teljesen körbe van zárva a saját testével vagy a falakkal. Ez egy speciális eset, amikor a játék véget érhet, még akkor is,
+        /// ha a kígyó nem ütközik közvetlenül.
+        /// </summary>
+        /// <returns></returns>
         private bool CheckNoMovesLeft()
         {
             Point[] directions =
@@ -152,6 +198,11 @@ namespace Snake.Controllers
             return true;
         }
 
+        /// <summary>
+        /// Ez a metódus a játék fő ciklusa, ami minden timer tick-kor fut le.
+        /// Frissíti a kígyó pozícióját, ellenőrzi az ütközéseket, kezeli az almaevést, és frissíti a vászon megjelenését.
+        /// Ha bármilyen ütközés történik, vagy nincs több lépési lehetőség, akkor meghívja a játék vége callback-et.
+        /// </summary>
         private void Tick()
         {
             System.Diagnostics.Debug.WriteLine(
@@ -197,26 +248,26 @@ namespace Snake.Controllers
             }
             _timer.Start();
         }
-
-
-        private void TriggerGameOver(string reason)
-        {
-            _timer.Stop();
-            System.Diagnostics.Debug.WriteLine("Game Over: " + reason + " | Pontszám: " + Score);
-            if (_onGameOver != null)
-                _onGameOver.Invoke();
-        }
-
+        
+        /// Ez a metódus elindítja a játékot, azaz elindítja a timer-t, ami elkezdi a kígyó mozgását.
         public void Start() { _timer.Start(); }
         public void Stop() { _timer.Stop(); }
 
+        /// <summary>
+        /// Ez a metódus frissíti a kígyó szegmenseinek pozícióját a listában, úgy hogy a fej új pozíciója lesz az első elem, és minden szegmens követi az előzőt.
+        /// Ez a kígyó mozgásának alapja, ahol a fej új helyre lép, és a test követi azt.
+        /// </summary>
+        /// <param name="newHead"></param>
         private void MoveSegments(Point newHead)
         {
             for (int i = _segments.Count - 1; i > 0; i--)
                 _segments[i] = _segments[i - 1];
             _segments[0] = newHead;
         }
-
+        /// <summary>
+        /// Ez a metódus frissíti a kígyó szegmenseinek megjelenését a vásznon, úgy hogy minden szegmens képe a megfelelő pozícióra kerül.
+        /// Emellett forgatja a fej képét az aktuális irányba.
+        /// </summary>
         private void RefreshCanvas()
         {
             for (int i = 0; i < _segmentImages.Count; i++)
@@ -226,7 +277,10 @@ namespace Snake.Controllers
             }
             RotateHead();
         }
-
+        /// <summary>
+        /// Ez a metódus forgatja a kígyó fejét a jelenlegi irányba, hogy vizuálisan is jelezze, merre halad a kígyó.
+        /// Ez egy egyszerű forgatás a 0, 90, 180 vagy 270 fokos szögekre az X és Y irány alapján.
+        /// </summary>
         private void RotateHead()
         {
             double angle;
@@ -240,7 +294,12 @@ namespace Snake.Controllers
             _segmentImages[0].RenderTransformOrigin = new Point(0.5, 0.5);
             _segmentImages[0].RenderTransform = new RotateTransform(angle);
         }
-
+        /// <summary>
+        /// Ez a metódus hozzáad egy új képet a vászonhoz egy adott bitmap és pozíció alapján.
+        /// Ez a kígyó szegmenseinek megjelenítésére szolgál, amikor új szegmenst adunk hozzá, vagy amikor a kígyó helyet változtat.
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="pos"></param>
         private void AddImageToCanvas(BitmapImage bitmap, Point pos)
         {
             Image img = new Image
@@ -255,13 +314,18 @@ namespace Snake.Controllers
             _gameCanvas.Children.Add(img);
             _segmentImages.Add(img);
         }
-
+        /// <summary>
+        /// Ez a metódus eltávolítja a kígyó összes szegmensének képét a vászonról, és törli a szegmens képek listáját.
+        /// </summary>
         private void ClearSnakeFromCanvas()
         {
             foreach (Image img in _segmentImages)
                 _gameCanvas.Children.Remove(img);
         }
-
+        /// <summary>
+        /// Ez a metódus eltávolítja az almát a vászonról, amikor a kígyó megeszi azt.
+        /// Keres egy olyan képet a vászon gyerekei között, aminek a Tag-je "apple", és eltávolítja azt.
+        /// </summary>
         private void RemoveAppleFromCanvas()
         {
             for (int i = _gameCanvas.Children.Count - 1; i >= 0; i--)
@@ -274,7 +338,11 @@ namespace Snake.Controllers
                 }
             }
         }
-
+        /// <summary>
+        /// Ez a metódus ellenőrzi, hogy a kígyó új feje ütközik-e az almával, ami azt jelenti, hogy a kígyó megeszi az almát.
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
         private bool IsAppleCollision(Point head)
         {
             foreach (UIElement child in _gameCanvas.Children)
